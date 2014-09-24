@@ -575,6 +575,10 @@ completeWord <- function(word, dictionary){
         return(x)
     }
     word <- substApostrophe(word)
+    reverse <- rev(strsplit(word, split=" ")[[1]])
+    
+    word <- reverse[1]
+    
     lw <- nchar(word)
     if(lw==1) setkey(dictionary, l1)
     else if(lw==2) setkey(dictionary, l2)
