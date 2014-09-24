@@ -392,7 +392,6 @@ probTrigram <- function(trigram, minProb = MINPROB){
     
     big1 <- paste(first, secon)
     big2 <- paste(secon, third)
-#    goodTrigrams <- nrow(ntddf3[ntddf3$end != EEN & substr(ntddf3$start, 1, 5)!=BBG,])
 
     type = "no prediction"
     cnt <- 0
@@ -411,8 +410,58 @@ probTrigram <- function(trigram, minProb = MINPROB){
         type<-"unigram"
         cnt <- ntddf[third]$cnt
         P   <- ntddf[third]$Pcont * D* D
+    }else if(sum(ntddf3$start!=0)){
+        # still no prediction
+        type<-"leave one out trigram"
+        a <- ntddf3[ntddf3$start == first,]
+        cnt <- a[order(-cnt)][1]$cnt
+        P   <- minProb * 0.5 # little more than the minimum
     }
     rc <- list(type, cnt, P)
+    return(rc)
+}
+
+nextWord <- function(sentence, minProb=MINPROB){
+    # tbd add treatment of apostrophe
+    # calculate the trigram probability
+    sentence <- stri_replace_all_regex(sentence, "['`´\u2018\u2019\u2027\u201B]", APO)
+    
+    # gracefully handle the case of a long phrase
+    reverse <- rev(strsplit(sentence, split=" ")[[1]])
+    
+    if(length(reverse)==0){
+        print("no string")
+        rc <- ntddf[order(-Pcont)][1:3,]$term
+        return(rc)
+    }
+    
+    secon <- reverse[1]
+    first <- reverse[2]
+    bigram <- paste(first, secon)
+
+    if(sum(ntddf3$pre==bigram)!=0){
+        print("trigram")
+        a <- ntddf3[ntddf3$pre==bigram & ntddf3$end != EEN,]
+        rc <- a[order(-PKN)][1:3,]$term
+        
+    }else if(sum(ntddf2$start==secon)!=0 ){
+        print("bigram")
+        a <- ntddf2[ntddf2$start==secon & ntddf2$end != EEN,]
+        rc  <- a[order(-Pcont2)][1:3,]$term
+
+    }else if(sum(ntddf3$start==first)){
+        # still no prediction
+        print("jump over one")
+        a <- ntddf3[ntddf3$start== first & ntddf3$end != EEN,]
+        print( a[order(-cnt)][1:3,]$term)
+        rc  <- a[order(-cnt)][1:3,]$end
+
+    }else{
+        print("you know nothing Jon Snow")
+        # choose the first thre with biggest continuation prob
+        rc <- ntddf[order(-Pcont)][1:3,]$term
+    }
+    rc <- stri_replace_all_regex(rc, APO, "'")
     return(rc)
 }
 
@@ -493,7 +542,7 @@ measurePerp <- function(dir=datadir, file="valid.txt", NN=100, slot=1){
     perplexity(logVec, length(logVec))
 }
 
-#############    set prediction from a prhase     ########################
+#############    set prediction from a phrase     ########################
 
 
 #-----------------------------------------------------------------
@@ -519,7 +568,7 @@ prepareWords <- function(unigrams){
 
 
 
-findNextWord <- function(word, dictionary){  
+completeWord <- function(word, dictionary){  
     substApostrophe  <- function(x) {
         x <- stri_replace_all_regex(x, "['`´\u2018\u2019\u2027\u201B]", APO)
         return(x)
@@ -539,9 +588,12 @@ findNextWord <- function(word, dictionary){
     # had to suppress the warning of mixed ascii utf-8
     suppressWarnings(sel <- dictionary[word])
     rc <- sel[order(-cnt),][1:3,]$term
+    
+    # reset apostrophe
+    rc <- stri_replace_all_regex(rc, APO, "'")
     setkey(dictionary, term)
     
     print(sel[order(-cnt),][1:3,]$cnt)
-
+    
     return(rc)
 }

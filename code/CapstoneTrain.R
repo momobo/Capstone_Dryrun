@@ -1,18 +1,7 @@
 setwd("C:\\Users\\mmorelli\\Google Drive\\Data Science\\10_Capstone")
-source(".\\github\\Capstone_Dryrun\\code\\CapstoneBase.R")
 
-source_https <- function(url, ...) {
-    # source from github. Courtesy of: http://tonybreyal.wordpress.com/2011/11/24/source_https-sourcing-an-r-script-from-github/
-        # load package
-    library(RCurl)
-    
-    # parse and evaluate each .R script
-    sapply(c(url, ...), function(u) {
-        eval(parse(text = getURL(u, followlocation = TRUE, cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl"))), envir = .GlobalEnv)
-    })
-}
-source_https("https://raw.github.com/tonybreyal/Blog-Reference-Functions/master/R/bingSearchXScraper/bingSearchXScraper.R"
-
+# source direct from github
+source("https://raw.githubusercontent.com/momobo/Capstone_Dryrun/master/code/CapstoneBase.R")
 #-----------------------------------------------------------------
 # divide between train, validation, test
 RELOAD01 <- F
@@ -29,7 +18,8 @@ if(RELOAD02){
     load(file=paste(datadir, CFILES, sep="\\"))
 }
 #  (use fakeCorp to load only a handful of corpus chunks)
-# corpfiles <- fakeCorp(2)
+# 
+corpfiles <- fakeCorp(3)
 
 # load list of corpus files
 # corpfiles
@@ -41,7 +31,7 @@ if(RELOAD02){
 
 #-----------------------------------------------------------------
 # create td data table from corpus
-RELOAD03 <- F
+RELOAD03 <- T
 if(RELOAD03){
     system.time(tddf  <- pasteNGram(corpfiles, 1))
     system.time(tddf2 <- pasteNGram(corpfiles, 2))
@@ -71,7 +61,7 @@ if(RELOAD03){
 #-------------------------
 
 # fourth phase: calculate probability
-RELOAD04 <- F
+RELOAD04 <- T
 if(RELOAD04){
     system.time(ntddf <-  addKNUnigram(tddf, tddf2, tddf3))
     system.time(ntddf2 <- addKNBigram(ntddf, tddf2, tddf3))
@@ -95,25 +85,51 @@ quiz("case of", c("beer", "soda", "cheese", "pretzel"))
 # ******************* END OF TRAINING  *************************************
 
 system.time(perp1 <- measurePerp(NN=100, slot=1))
+perp1
 system.time(perp2 <- measurePerp(NN=100, slot=2))
+perp2
 system.time(perp3 <- measurePerp(NN=100, slot=3))
+perp3
 system.time(perp4 <- measurePerp(NN=100, slot=4))
+perp4
 system.time(perp5 <- measurePerp(NN=100, slot=5))
-
+perp5
 
 perp1
-perp2
 perp3
 perp4
 
 
 #-----------------------------------------------------------------
 
+#-----------------------------------------------------------------
+
 words <- prepareWords(tddf)
-prediction <- findNextWord("let is", words)
+prediction <- findNextWord("is", words)
 prediction
 
 a <- tddf[substr(tddf$term, 1, 3)=="let",]
 a$term
 
 findNextWord("the", words)
+nextWord("my asi")
+
+
+head(ntddf3)
+head(ntddf)
+a <- ntddf3[ntddf3$start=="not"]
+
+
+bigram <- "1"
+a <- rev(strsplit(bigram, split=" ")[[1]])
+length(a)==0
+a
+casual <- floor(runif(1, 1, 4))
+# else{
+#     # default prediction. No information push the best cont prob
+#     type <- "you know nothing Jon Snow"
+#     ntddf[order(-Pcont)][floor(runif(1, 1, 4)),]$term
+    
+}
+
+
