@@ -34,7 +34,6 @@ library(data.table)
 #-----------------------------------------------------------------------------------------------
 
 #############    initialize variables ########################
-#setwd("C:\\Users\\mmorelli\\Google Drive\\Data Science\\10_Capstone")
 
 
 datadir <- ".\\data\\final\\en_US"
