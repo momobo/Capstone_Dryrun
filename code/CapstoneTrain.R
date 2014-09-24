@@ -112,17 +112,22 @@ a <- tddf[substr(tddf$term, 1, 3)=="let",]
 a$term
 
 findNextWord("the", words)
-nextWord("my asi")
+nextWord("let's")
+
+string <- "Pippo "
+substr(rev(string), 1, 1)
+substr(string, nchar(string),nchar(string))
+
+nchar(string)
+strrev(string)
+?substr
 
 
 head(ntddf3)
 head(ntddf)
-a <- ntddf3[ntddf3$start=="not"]
 
 
-bigram <- "1"
-a <- rev(strsplit(bigram, split=" ")[[1]])
-length(a)==0
+
 a
 casual <- floor(runif(1, 1, 4))
 # else{

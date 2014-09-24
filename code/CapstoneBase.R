@@ -442,7 +442,8 @@ nextWord <- function(sentence, minProb=MINPROB){
     if(sum(ntddf3$pre==bigram)!=0){
         print("trigram")
         a <- ntddf3[ntddf3$pre==bigram & ntddf3$end != EEN,]
-        rc <- a[order(-PKN)][1:3,]$term
+        print( a[order(-PKN)][1:3,]$term)
+        rc <- a[order(-PKN)][1:3,]$end
         
     }else if(sum(ntddf2$start==secon)!=0 ){
         print("bigram")
