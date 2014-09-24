@@ -448,7 +448,7 @@ nextWord <- function(sentence, minProb=MINPROB){
     }else if(sum(ntddf2$start==secon)!=0 ){
         print("bigram")
         a <- ntddf2[ntddf2$start==secon & ntddf2$end != EEN,]
-        rc  <- a[order(-Pcont2)][1:3,]$term
+        rc  <- a[order(-Pcont2)][1:3,]$end
 
     }else if(sum(ntddf3$start==first)){
         # still no prediction

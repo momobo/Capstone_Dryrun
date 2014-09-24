@@ -1,13 +1,21 @@
-
 library(shiny)
 library(datasets)
+source("https://raw.githubusercontent.com/momobo/Capstone_Dryrun/master/code/CapstoneBase.R")
+datadir <- "."
+datadir <- "C:\\Users\\mmorelli\\Google Drive\\Data Science\\10_Capstone\\github\\Capstone_Dryrun\\code\\experiments\\simple"
+load(file=paste(datadir, "ntddf.save",  sep="\\"))
+load(file=paste(datadir, "ntddf2.save", sep="\\"))
+load(file=paste(datadir, "ntddf3.save", sep="\\"))
+
 fun <-function(string){
 
     # if last char is space
     if(" " == substr(string, nchar(string),nchar(string))){
-        return("aha")
+        return("-----")
     }else {
-        return(paste(string, "plop"))
+        res <- nextWord(string)
+        
+        return(res[1])
     }
 }
 
@@ -22,14 +30,14 @@ shinyServer(function(input, output) {
     #  2) The computation and result are shared by all the callers 
     #      (it only executes a single time)
     #
-    datasetInput <- reactive({
-        switch(input$dataset,
-               "rock" = rock,
-               "pressure" = pressure,
-               "cars" = cars)
-    })
-    
-    # The output$caption is computed based on a reactive expression
+#     datasetInput <- reactive({
+#         switch(input$dataset,
+#                "rock" = rock,
+#                "pressure" = pressure,
+#                "cars" = cars)
+#     })
+#     
+#     # The output$caption is computed based on a reactive expression
     # that returns input$caption. When the user changes the
     # "caption" field:
     #
