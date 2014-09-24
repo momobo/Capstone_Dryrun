@@ -104,16 +104,18 @@ perp4
 
 #-----------------------------------------------------------------
 
-words <- prepareWords(tddf)
+nextWord("fewfwew")
+
+words <- prepareWords(ntddf)
 prediction <- findNextWord("is", words)
 prediction
 
 a <- tddf[substr(tddf$term, 1, 3)=="let",]
 a$term
 
-findNextWord("the", words)
-nextWord("let's")
-
+findNextWord("the")
+a <- nextWord("let's just")
+a
 string <- "Pippo "
 substr(rev(string), 1, 1)
 substr(string, nchar(string),nchar(string))
@@ -126,6 +128,7 @@ strrev(string)
 head(ntddf3)
 head(ntddf)
 
+completeWord("res", words)
 
 
 a

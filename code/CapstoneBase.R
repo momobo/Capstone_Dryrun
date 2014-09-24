@@ -438,7 +438,7 @@ nextWord <- function(sentence, minProb=MINPROB){
     secon <- reverse[1]
     first <- reverse[2]
     bigram <- paste(first, secon)
-
+    print(first)
     if(sum(ntddf3$pre==bigram)!=0){
         print("trigram")
         a <- ntddf3[ntddf3$pre==bigram & ntddf3$end != EEN,]
@@ -450,7 +450,7 @@ nextWord <- function(sentence, minProb=MINPROB){
         a <- ntddf2[ntddf2$start==secon & ntddf2$end != EEN,]
         rc  <- a[order(-Pcont2)][1:3,]$end
 
-    }else if(sum(ntddf3$start==first)){
+    }else if(!is.na(first) & sum(ntddf3$start==first)){
         # still no prediction
         print("jump over one")
         a <- ntddf3[ntddf3$start== first & ntddf3$end != EEN,]

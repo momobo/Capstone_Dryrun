@@ -6,15 +6,16 @@ datadir <- "C:\\Users\\mmorelli\\Google Drive\\Data Science\\10_Capstone\\github
 load(file=paste(datadir, "ntddf.save",  sep="\\"))
 load(file=paste(datadir, "ntddf2.save", sep="\\"))
 load(file=paste(datadir, "ntddf3.save", sep="\\"))
+words <- prepareWords(ntddf)
 
 fun <-function(string){
 
     # if last char is space
     if(" " == substr(string, nchar(string),nchar(string))){
-        return("-----")
-    }else {
         res <- nextWord(string)
-        
+        return(res[1])
+    }else {
+        res <- completeWord(string, words)
         return(res[1])
     }
 }
