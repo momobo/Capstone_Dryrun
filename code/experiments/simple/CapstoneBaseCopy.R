@@ -58,10 +58,8 @@ mapLen  <- 2000
 NOHAPAX <- T
 D       <- 0.75
 MINPROB <- 1E-8
-TOLOWER <- F
 
 lang <- "en_US"
-
 #-----------------------------------------------------------------
 
 #############    train, test validation   ########################
@@ -163,9 +161,8 @@ vecToCorpus <- function(vec, lang){
     myCorpus <- tm_map(myCorpus, content_transformer(removeNumbers))
     myCorpus <- tm_map(myCorpus, content_transformer(stripWhitespace))
     # tolower 
-    if(TOLOWER){
-        myCorpus <- tm_map(myCorpus, content_transformer(myTolower))
-    }
+    myCorpus <- tm_map(myCorpus, content_transformer(myTolower))
+    
     # treatment of apostrophe
     myCorpus <- tm_map(myCorpus, content_transformer(substApostrophe) )
     

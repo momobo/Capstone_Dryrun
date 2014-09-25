@@ -13,13 +13,17 @@ shinyUI(fluidPage(
     # updated in the output area immediately as you type
     sidebarLayout(
         sidebarPanel(
-            textInput("caption",  "Write here")
+            textInput("captionEN",  "Write here:"),
+            textInput("captionDE",  "Schreib hier:")
         ),
         
         # Show the caption, a summary of the dataset and an HTML 
         # table with the requested number of observations
         mainPanel(
-            h3(textOutput("caption", container = span))
+           br(),
+            h3(textOutput("captionEN", container = span)),br(),
+            h3(textOutput("captionDE", container = span))
+            
         )
     )
 ))
