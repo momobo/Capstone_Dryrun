@@ -58,7 +58,7 @@ mapLen  <- 2000
 NOHAPAX <- T
 D       <- 0.75
 MINPROB <- 1E-8
-TOLOWER <- F
+TOLOWER <- T
 
 lang <- "en_US"
 
@@ -188,9 +188,9 @@ fakeCorp <- function(n, name="traincorpus.save"){
 #############    tokenize  ###############
 # NB: it is possible to parallelize the tokenization. Just divide the corpus in slices
 # then put togheter the resultant data frame. Then group by over the ngram (with ddply)
-loadNGram <- function(corpus, N){
+loadNGram <- function(corpus, N, tolower=TOLOWER){
     ntokenizer <- function(x, toks) function(x) NGramTokenizer(x, Weka_control(min = toks, max = toks))
-    tdm <-   TermDocumentMatrix(corpus, control = list(tokenize = ntokenizer(toks=N),wordLengths=c(1,Inf)))
+    tdm <-   TermDocumentMatrix(corpus, control = list(tokenize = ntokenizer(toks=N),wordLengths=c(1,Inf), tolower=tolower))
     
     df <- tdm2df(tdm, N)
     return(df)
@@ -211,14 +211,14 @@ tdm2df <- function(tdm, N){
   return(dfft)
 }
 
-pasteNGram <- function(corpfiles, N){
+pasteNGram <- function(corpfiles, N, tolower=TOLOWER){
     # should be faster with data table
     # should be much faster filtering hapax
     ldf <- list(NULL)
     for(i in 1:length(corpfiles)){
         cat(corpfiles[i], "gram:",N,"\n")
         load(file=paste(datadir, corpfiles[i], sep="\\"))
-        df <- loadNGram(chunk_corpus, N)
+        df <- loadNGram(chunk_corpus, N, tolower)
         ldf[[i]] <- df
     }
     cat("putting all togheter \n")

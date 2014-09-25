@@ -2,11 +2,19 @@ setwd("C:\\Users\\mmorelli\\Google Drive\\Data Science\\10_Capstone")
 
 # source direct from github
 source("https://raw.githubusercontent.com/momobo/Capstone_Dryrun/master/code/CapstoneBase.R")
-lang <- "de_DE"
-datadir <- ".\\data\\final\\de_DE"
-file <- paste(datadir, fileb, sep="\\")
-fileb   <- "de_DE.blogs.txt"
-trainfile <- paste(datadir, "train.txt", sep="\\")
+
+# train german words 
+DE <- F
+if("DE"){
+    lang <- "de_DE"
+    datadir <- ".\\data\\final\\de_DE"
+    file <- paste(datadir, fileb, sep="\\")
+    fileb   <- "de_DE.blogs.txt"
+    trainfile <- paste(datadir, "train.txt", sep="\\")
+    TOLOWER <- T
+    (remember to TOLOWER the )
+}
+# train english words
 #-------------------------------
 ----------------------------------
 # divide between train, validation, test
@@ -25,7 +33,7 @@ if(RELOAD02){
 }
 #  (use fakeCorp to load only a handful of corpus chunks)
 # 
-# corpfiles <- fakeCorp(3)
+# corpfiles <- fakeCorp(10)
 
 # load list of corpus files
 # corpfiles
@@ -39,9 +47,9 @@ if(RELOAD02){
 # create td data table from corpus
 RELOAD03 <- T
 if(RELOAD03){
-    system.time(tddf  <- pasteNGram(corpfiles, 1))
-    system.time(tddf2 <- pasteNGram(corpfiles, 2))
-    system.time(tddf3 <- pasteNGram(corpfiles, 3))
+    system.time(tddf  <- pasteNGram(corpfiles, 1, tolower=TOLOWER))
+    system.time(tddf2 <- pasteNGram(corpfiles, 2, tolower=TOLOWER))
+    system.time(tddf3 <- pasteNGram(corpfiles, 3, tolower=TOLOWER))
     
     #  add index and remove start of phrase
     tddf2 <- addIndexN(tddf2 ,2)
@@ -84,11 +92,13 @@ if(RELOAD04){
 #
 
 
+
 # ****************************************************    SONO QUI
 quiz("case of", c("beer", "soda", "cheese", "pretzel"))
 #-----------------------------------------------------------------
 
 # ******************* END OF TRAINING  *************************************
+ntddf$term
 
 system.time(perp1 <- measurePerp(NN=100, slot=1))
 perp1

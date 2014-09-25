@@ -1,7 +1,7 @@
 library(shiny)
 library(datasets)
 
-source("./CapstoneBaseCopy.R", local=T, encoding="UTF-8")
+source("https://raw.githubusercontent.com/momobo/Capstone_Dryrun/master/code/CapstoneBase.R", local=T, encoding="UTF-8")
 
 #datadir <- "C:\\Users\\mmorelli\\Google Drive\\Data Science\\10_Capstone\\github\\Capstone_Dryrun\\code\\experiments\\simple"
 datadir <- "."

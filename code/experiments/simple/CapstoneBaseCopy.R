@@ -58,8 +58,10 @@ mapLen  <- 2000
 NOHAPAX <- T
 D       <- 0.75
 MINPROB <- 1E-8
+TOLOWER <- F
 
 lang <- "en_US"
+
 #-----------------------------------------------------------------
 
 #############    train, test validation   ########################
@@ -148,7 +150,7 @@ vecToCorpus <- function(vec, lang){
     }
     killCommas <- function(x) UseMethod("killCommas", x)
     killCommas <- killCommas  <- function(x) {
-        x <- stri_replace_all_regex(x, "[,]", " ")
+        x <- stri_replace_all_regex(x, "[,]", " ") 
         return(x)
     }    
     myTolower <- function(x) stri_trans_tolower(x, lang)
@@ -161,8 +163,9 @@ vecToCorpus <- function(vec, lang){
     myCorpus <- tm_map(myCorpus, content_transformer(removeNumbers))
     myCorpus <- tm_map(myCorpus, content_transformer(stripWhitespace))
     # tolower 
-    myCorpus <- tm_map(myCorpus, content_transformer(myTolower))
-    
+    if(TOLOWER){
+        myCorpus <- tm_map(myCorpus, content_transformer(myTolower))
+    }
     # treatment of apostrophe
     myCorpus <- tm_map(myCorpus, content_transformer(substApostrophe) )
     
