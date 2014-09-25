@@ -9,7 +9,6 @@ load(file=paste(datadir, lang, "ntddf2.save", sep="/"), verbose=T)
 load(file=paste(datadir, lang, "ntddf3.save", sep="/"), verbose=T)
 words <- prepareWords(ntddf)
 
-
 funE <-function(string, df1, df2, df3, dict){
     # print(paste(datadir, lang, "ntddf3.save", sep="\\"))
     # if last char is space

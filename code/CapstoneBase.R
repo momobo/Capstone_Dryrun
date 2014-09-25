@@ -463,7 +463,7 @@ nextWord <- function(sentence, df1, df2, df3, minProb=MINPROB){
         rc <- df1[order(-Pcont)][1:3,]$term
     }
     rc <- stri_replace_all_regex(rc, APO, "'")
-    if(is.na(rc)) rc <- "?"
+    if(is.na(rc[1])) rc <- "?"
     return(rc)
 }
 
@@ -599,7 +599,7 @@ completeWord <- function(word, dictionary){
     rc <- stri_replace_all_regex(rc, APO, "'")
     setkey(dictionary, term)
     
-    print(sel[order(-cnt),][1:3,]$cnt)
+    cat(sel[order(-cnt),][1:3,]$cnt, "\n")
     
     return(rc)
 }
