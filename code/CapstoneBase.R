@@ -422,7 +422,7 @@ probTrigram <- function(trigram, df1, df2, df3, minProb = MINPROB){
 }
 
 nextWord <- function(sentence, df1, df2, df3, minProb=MINPROB){
-    # tbd add treatment of apostrophe
+    # tbd add treatment of apostrophe 
     # calculate the trigram probability
     sentence <- stri_replace_all_regex(sentence, "['`´\u2018\u2019\u2027\u201B]", APO)
     
@@ -500,12 +500,12 @@ perplexity <- function(logP,N){
 }
 
 
-quiz <- function(bigram, cont){
+quiz <- function(bigram, cont, df1, df2, df3){
     df <- data.frame(word=NULL, type=NULL, cnt=NULL, prob=NULL)
     for(i in seq_along(cont)){
         trigram <- paste(bigram, cont[i], sep=" ")
         print(trigram)
-        lis <- probTrigram(trigram, ntddf, ntddf2, ntddf3)
+        lis <- probTrigram(trigram, df1, df2, df3)
         df[i,"word"] <- cont[i]
         df[i,"type"] <- lis[[1]]
         df[i,"cnt"]  <- lis[[2]]
