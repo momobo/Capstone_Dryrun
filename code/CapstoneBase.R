@@ -442,7 +442,7 @@ nextWord <- function(sentence, df1, df2, df3, minProb=MINPROB){
     if(sum(df3$pre==bigram)!=0){
         cat("trigram\n")
         a <- df3[df3$pre==bigram & df3$end != EEN,]
-        print( a[order(-PKN)][1:3,]$term, "\n")
+        cat( a[order(-PKN)][1:3,]$term, "\n")
         rc <- a[order(-PKN)][1:3,]$end
         
     }else if(sum(df2$start==secon)!=0 ){
@@ -600,6 +600,7 @@ completeWord <- function(word, dictionary){
     setkey(dictionary, term)
     
     cat(sel[order(-cnt),][1:3,]$cnt, "\n")
+    if(is.na(rc[1])) rc <- "?"
     
     return(rc)
 }

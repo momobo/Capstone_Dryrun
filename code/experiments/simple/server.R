@@ -1,6 +1,6 @@
 library(shiny)
 library(datasets)
-source("https://raw.githubusercontent.com/momobo/Capstone_Dryrun/master/code/CapstoneBase.R")
+source("https://raw.githubusercontent.com/momobo/Capstone_Dryrun/master/code/CapstoneBase.R", local=T)
 datadir <- "C:\\Users\\mmorelli\\Google Drive\\Data Science\\10_Capstone\\github\\Capstone_Dryrun\\code\\experiments\\simple"
 #datadir <- getwd()
 lang <- "de_DE"
@@ -20,7 +20,8 @@ funE <-function(string, df1, df2, df3, dict){
         return(res[1])
     }
 }
-?load
+
+?source
 # Define server logic required to summarize and view the selected
 # dataset
 shinyServer(function(input, output) {
