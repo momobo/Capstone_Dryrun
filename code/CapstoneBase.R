@@ -150,7 +150,7 @@ vecToCorpus <- function(vec, lang){
     }
     killCommas <- function(x) UseMethod("killCommas", x)
     killCommas <- killCommas  <- function(x) {
-        x <- stri_replace_all_regex(x, "[,]", " ")
+        x <- stri_replace_all_regex(x, "[,]", " ") 
         return(x)
     }    
     myTolower <- function(x) stri_trans_tolower(x, lang)
