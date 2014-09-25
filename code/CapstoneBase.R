@@ -445,7 +445,7 @@ nextWord <- function(sentence, df1, df2, df3, minProb=MINPROB){
         print( a[order(-PKN)][1:3,]$term, "\n")
         rc <- a[order(-PKN)][1:3,]$end
         
-    }else if(sum(ntddf2$start==secon)!=0 ){
+    }else if(sum(df2$start==secon)!=0 ){
         cat("bigram\n")
         a <- df2[df2$start==secon & df2$end != EEN,]
         rc  <- a[order(-Pcont2)][1:3,]$end
@@ -453,7 +453,7 @@ nextWord <- function(sentence, df1, df2, df3, minProb=MINPROB){
     }else if(!is.na(first) & sum(df3$start==first)){
         # still no prediction
         cat("jump over one ")
-        a <- df3[ntddf3$start== first & df3$end != EEN,]
+        a <- df3[df3$start== first & df3$end != EEN,]
         cat( a[order(-cnt)][1:3,]$term, "\n")
         rc  <- a[order(-cnt)][1:3,]$end
 
