@@ -5,7 +5,7 @@ library(shiny)
 shinyUI(fluidPage(
     
     # Application title
-    titlePanel("Reactivity"),
+    titlePanel("Prediction"),
     
     # Sidebar with controls to provide a caption, select a dataset,
     # and specify the number of observations to view. Note that
@@ -13,9 +13,8 @@ shinyUI(fluidPage(
     # updated in the output area immediately as you type
     sidebarLayout(
         sidebarPanel(
-            textInput("caption", "Caption:", "Write here")
+            textInput("caption",  "Write here")
         ),
-        
         
         # Show the caption, a summary of the dataset and an HTML 
         # table with the requested number of observations

@@ -383,7 +383,7 @@ resetApo <- function(string){
     string <- stri_replace_all_regex(string, APO, "'")
 }
 
-probTrigram <- function(trigram, minProb = MINPROB){
+probTrigram <- function(trigram, df1, df2, df3, minProb = MINPROB){
     # tbd add treatment of apostrophe
     # calculate the trigram probability
     first <- strsplit(trigram, split=" ")[[1]][1]
@@ -396,24 +396,24 @@ probTrigram <- function(trigram, minProb = MINPROB){
     type = "no prediction"
     cnt <- 0
     P <- minProb
-    if(sum(ntddf3$term==trigram)!=0){
+    if(sum(df3$term==trigram)!=0){
         type<-"trigram"
-        cnt <- ntddf3[trigram]$cnt
-        P   <- ntddf3[trigram]$PKN
+        cnt <- df3[trigram]$cnt
+        P   <- df3[trigram]$PKN
  
-    }else if(sum(ntddf2$term==big2)!=0 ){
+    }else if(sum(df2$term==big2)!=0 ){
         type<-"bigram"
-        cnt <- ntddf2[big2]$cnt
-        P   <- ntddf2[big2]$Pcont2 * D
+        cnt <- df2[big2]$cnt
+        P   <- df2[big2]$Pcont2 * D
         
-    }else if(sum(ntddf$term==third)!=0 ){
+    }else if(sum(df1$term==third)!=0 ){
         type<-"unigram"
-        cnt <- ntddf[third]$cnt
-        P   <- ntddf[third]$Pcont * D* D
-    }else if(sum(ntddf3$start!=0)){
+        cnt <- df1[third]$cnt
+        P   <- df1[third]$Pcont * D* D
+    }else if(sum(df3$start!=0)){
         # still no prediction
         type<-"leave one out trigram"
-        a <- ntddf3[ntddf3$start == first,]
+        a <- df3[df3$start == first,]
         cnt <- a[order(-cnt)][1]$cnt
         P   <- minProb * 0.5 # little more than the minimum
     }
@@ -421,7 +421,7 @@ probTrigram <- function(trigram, minProb = MINPROB){
     return(rc)
 }
 
-nextWord <- function(sentence, minProb=MINPROB){
+nextWord <- function(sentence, df1, df2, df3, minProb=MINPROB){
     # tbd add treatment of apostrophe
     # calculate the trigram probability
     sentence <- stri_replace_all_regex(sentence, "['`´\u2018\u2019\u2027\u201B]", APO)
@@ -430,44 +430,45 @@ nextWord <- function(sentence, minProb=MINPROB){
     reverse <- rev(strsplit(sentence, split=" ")[[1]])
     
     if(length(reverse)==0){
-        print("no string")
-        rc <- ntddf[order(-Pcont)][1:3,]$term
+        cat("no string\n")
+        rc <- df1[order(-Pcont)][1:3,]$term
         return(rc)
     }
     
     secon <- reverse[1]
     first <- reverse[2]
     bigram <- paste(first, secon)
-    print(first)
-    if(sum(ntddf3$pre==bigram)!=0){
-        print("trigram")
-        a <- ntddf3[ntddf3$pre==bigram & ntddf3$end != EEN,]
-        print( a[order(-PKN)][1:3,]$term)
+    cat(first, "\n")
+    if(sum(df3$pre==bigram)!=0){
+        cat("trigram\n")
+        a <- df3[df3$pre==bigram & df3$end != EEN,]
+        print( a[order(-PKN)][1:3,]$term, "\n")
         rc <- a[order(-PKN)][1:3,]$end
         
     }else if(sum(ntddf2$start==secon)!=0 ){
-        print("bigram")
-        a <- ntddf2[ntddf2$start==secon & ntddf2$end != EEN,]
+        cat("bigram\n")
+        a <- df2[df2$start==secon & df2$end != EEN,]
         rc  <- a[order(-Pcont2)][1:3,]$end
 
-    }else if(!is.na(first) & sum(ntddf3$start==first)){
+    }else if(!is.na(first) & sum(df3$start==first)){
         # still no prediction
-        print("jump over one")
-        a <- ntddf3[ntddf3$start== first & ntddf3$end != EEN,]
-        print( a[order(-cnt)][1:3,]$term)
+        cat("jump over one ")
+        a <- df3[ntddf3$start== first & df3$end != EEN,]
+        cat( a[order(-cnt)][1:3,]$term, "\n")
         rc  <- a[order(-cnt)][1:3,]$end
 
     }else{
-        print("you know nothing Jon Snow")
+        cat("you know nothing Jon Snow\n")
         # choose the first thre with biggest continuation prob
-        rc <- ntddf[order(-Pcont)][1:3,]$term
+        rc <- df1[order(-Pcont)][1:3,]$term
     }
     rc <- stri_replace_all_regex(rc, APO, "'")
+    if(is.na(rc)) rc <- "?"
     return(rc)
 }
 
-probCalc <- function(vec, minProb = MINPROB){
-    # tbd add treatment of apostrophe
+probCalc <- function(vec, df1, df2, df3, minProb = MINPROB){
+    # still to be scope adjusted
     first <- vec[1]
     secon <- vec[2]
     third <- vec[3]
@@ -480,14 +481,14 @@ probCalc <- function(vec, minProb = MINPROB){
     type = "no prediction"
     cnt <- 0
     P <- minProb
-    if(sum(ntddf3$term==trigram)!=0){
-        P   <- ntddf3[trigram]$PKN
+    if(sum(df3$term==trigram)!=0){
+        P   <- df3[trigram]$PKN
         
     }else if(sum(ntddf2$term==big2)!=0 ){
-        P   <- ntddf2[big2]$Pcont2 * D
+        P   <- df2[big2]$Pcont2 * D
         
     }else if(sum(ntddf$term==third)!=0 ){
-        P   <- ntddf[third]$Pcont * D* D
+        P   <- df1[third]$Pcont * D* D
     }
     #rc <- list(type, cnt, P)
     return(P)
@@ -504,7 +505,7 @@ quiz <- function(bigram, cont){
     for(i in seq_along(cont)){
         trigram <- paste(bigram, cont[i], sep=" ")
         print(trigram)
-        lis <- probTrigram(trigram)
+        lis <- probTrigram(trigram, ntddf, ntddf2, ntddf3)
         df[i,"word"] <- cont[i]
         df[i,"type"] <- lis[[1]]
         df[i,"cnt"]  <- lis[[2]]
@@ -534,7 +535,7 @@ measurePerp <- function(dir=datadir, file="valid.txt", NN=100, slot=1){
         for(j in 2:l){
             pred <- vecSatz[(j-2):j]
             if(length(pred) == 2) pred <- c(BBG, pred)
-            suppressWarnings(prob <- probCalc(pred))
+            suppressWarnings(prob <- probCalc(pred, ntddf, ntddf2, ntddf3))
             vecProb[j-1] <- log(prob)
         }
         logVec <- c(logVec, vecProb)

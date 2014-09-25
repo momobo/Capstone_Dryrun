@@ -1,15 +1,17 @@
 library(shiny)
 library(datasets)
-source("https://raw.githubusercontent.com/momobo/Capstone_Dryrun/master/code/CapstoneBase.R")
-datadir <- "."
+#source("https://raw.githubusercontent.com/momobo/Capstone_Dryrun/master/code/CapstoneBase.R")
 datadir <- "C:\\Users\\mmorelli\\Google Drive\\Data Science\\10_Capstone\\github\\Capstone_Dryrun\\code\\experiments\\simple"
-load(file=paste(datadir, "ntddf.save",  sep="\\"))
-load(file=paste(datadir, "ntddf2.save", sep="\\"))
-load(file=paste(datadir, "ntddf3.save", sep="\\"))
+#datadir <- getwd()
+lang <- "de_DE"
+load(file=paste(datadir, lang, "ntddf.save",  sep="/"), verbose=T)
+load(file=paste(datadir, lang, "ntddf2.save", sep="/"), verbose=T)
+load(file=paste(datadir, lang, "ntddf3.save", sep="/"), verbose=T)
 words <- prepareWords(ntddf)
 
-fun <-function(string){
 
+funE <-function(string){
+    # print(paste(datadir, lang, "ntddf3.save", sep="\\"))
     # if last char is space
     if(" " == substr(string, nchar(string),nchar(string))){
         res <- nextWord(string)
@@ -19,7 +21,7 @@ fun <-function(string){
         return(res[1])
     }
 }
-
+?load
 # Define server logic required to summarize and view the selected
 # dataset
 shinyServer(function(input, output) {
@@ -51,7 +53,7 @@ shinyServer(function(input, output) {
     # below don't depend on input$caption, those expressions are
     # NOT called when input$caption changes.
     output$caption <- renderText({
-        fun(input$caption)
+        funE(input$caption)
     })
     
     # The output$summary depends on the datasetInput reactive

@@ -2,7 +2,13 @@ setwd("C:\\Users\\mmorelli\\Google Drive\\Data Science\\10_Capstone")
 
 # source direct from github
 source("https://raw.githubusercontent.com/momobo/Capstone_Dryrun/master/code/CapstoneBase.R")
-#-----------------------------------------------------------------
+lang <- "de_DE"
+datadir <- ".\\data\\final\\de_DE"
+file <- paste(datadir, fileb, sep="\\")
+fileb   <- "de_DE.blogs.txt"
+trainfile <- paste(datadir, "train.txt", sep="\\")
+#-------------------------------
+----------------------------------
 # divide between train, validation, test
 RELOAD01 <- F
 if(RELOAD01){
@@ -19,7 +25,7 @@ if(RELOAD02){
 }
 #  (use fakeCorp to load only a handful of corpus chunks)
 # 
-corpfiles <- fakeCorp(3)
+# corpfiles <- fakeCorp(3)
 
 # load list of corpus files
 # corpfiles
@@ -71,10 +77,10 @@ if(RELOAD04){
     save(ntddf2, file= paste(datadir, "ntddf2.save", sep="\\"))
     save(ntddf3, file= paste(datadir, "ntddf3.save", sep="\\"))
 }else{
-    load(file=paste(datadir, "ntddf.save",  sep="\\"))
-    load(file=paste(datadir, "ntddf2.save", sep="\\"))
-    load(file=paste(datadir, "ntddf3.save", sep="\\"))
-}
+        load(file=paste(datadir, "ntddf.save",  sep="\\"))
+        load(file=paste(datadir, "ntddf2.save", sep="\\"))
+        load(file=paste(datadir, "ntddf3.save", sep="\\"))
+    }
 #
 
 
