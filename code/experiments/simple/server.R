@@ -1,6 +1,6 @@
 library(shiny)
 library(datasets)
-source("https://raw.githubusercontent.com/momobo/Capstone_Dryrun/master/code/CapstoneBase.R", local=T)
+source("https://raw.githubusercontent.com/momobo/Capstone_Dryrun/master/code/CapstoneBase.R", local=F)
 datadir <- "C:\\Users\\mmorelli\\Google Drive\\Data Science\\10_Capstone\\github\\Capstone_Dryrun\\code\\experiments\\simple"
 #datadir <- getwd()
 lang <- "de_DE"
@@ -15,12 +15,12 @@ funE <-function(string, df1, df2, df3, dict){
     if(" " == substr(string, nchar(string),nchar(string))){
         res <- nextWord(string, df1, df2, df3)
         return(res[1])
-    }else {
+    }else{
         res <- completeWord(string, dict)
         return(res[1])
     }
 }
-
+nextWord
 ?source
 # Define server logic required to summarize and view the selected
 # dataset

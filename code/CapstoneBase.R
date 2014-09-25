@@ -92,7 +92,7 @@ partitionData <- function(datadir, fileb, probcut=c(0.6, 0.8, 1) ){
 
 #----------------------------------------------------------------
 
-#############    create and prefilter corpus   ###################
+#############    create and prefilter corpus    ###################
 
 
 brokeInPhrases <- function(vector, regex="[.!?]", beg=BBG, end=EEN){
