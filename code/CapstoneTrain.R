@@ -1,20 +1,50 @@
-setwd("C:\\Users\\mmorelli\\Google Drive\\Data Science\\10_Capstone")
+#-------------------------------------------------------------------------------
+# Capstone Project
+# Training language file
+#-------------------------------------------------------------------------------
+Capstone_Main_Dir <- "C:\\Users\\mmorelli\\Google Drive\\Data Science\\10_Capstone"
+Github_URL <- "https://raw.githubusercontent.com/momobo/Capstone_Dryrun/master/code/CapstoneBase.R"
 
-# source direct from github
-source("https://raw.githubusercontent.com/momobo/Capstone_Dryrun/master/code/CapstoneBase.R")
+#############    initialize variables ########################
 
-# train german words 
-DE <- F
-if("DE"){
-    lang <- "de_DE"
-    datadir <- ".\\data\\final\\de_DE"
-    file <- paste(datadir, fileb, sep="\\")
-    fileb   <- "de_DE.blogs.txt"
-    trainfile <- paste(datadir, "train.txt", sep="\\")
+setwd(Capstone_Main_Dir)
+source(Github_URL)
+
+# decide the language to train for
+lang <- "en_US"
+#lang <- "de_DE"
+
+if(lang=="en_US"){
+    LOADBAD <- F # load bad words?
     TOLOWER <- T
-    (remember to TOLOWER the )
+    if(LOADBAD){ 
+        # modify to reload, badword not used at the moment
+        urlbad <- "https://raw.githubusercontent.com/shutterstock/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/master/en"
+        download.file(urlbad, ".\\badWords", method = "auto", quiet=FALSE)
+        badwords <- readLines(".\\badWords")
+    }
+}else if(lang=="de_DE"){
+    TOLOWER <- F
 }
-# train english words
+
+
+datadir <- paste0(".\\data\\final\\", lang)
+fileb   <- paste0(lang, ".blogs.txt")
+file <- paste(datadir, fileb, sep="\\")
+trainfile <- paste(datadir, "train.txt", sep="\\")
+BBG     <- "__s__"
+EEN     <- "__es__"
+APO     <- "__ap__"
+CFILES  <- "stucknames.save"
+limit   <-  10000000
+mapLen  <- 2000
+NOHAPAX <- T
+D       <- 0.75
+MINPROB <- 1E-8
+
+
+#-----------------------------------------------------------------
+
 #-------------------------------
 ----------------------------------
 # divide between train, validation, test
@@ -33,7 +63,7 @@ if(RELOAD02){
 }
 #  (use fakeCorp to load only a handful of corpus chunks)
 # 
-# corpfiles <- fakeCorp(10)
+# corpfiles <- fakeCorp(55)
 
 # load list of corpus files
 # corpfiles

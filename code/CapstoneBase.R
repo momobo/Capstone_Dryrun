@@ -27,42 +27,12 @@ library(RWeka)
 library(stringi)
 library(ggplot2)
 library(scales)
-#library(filehash)
 library(slam)
 library(plyr)
 library(data.table)
 #-----------------------------------------------------------------------------------------------
 
-#############    initialize variables ########################
 
-
-datadir <- ".\\data\\final\\en_US"
-fileb   <- "en_US.blogs.txt"
-# list of bad words
-LOADBAD <- F
-if(LOADBAD){ 
-# modify to reload, badword not used at the moment
-  urlbad <- "https://raw.githubusercontent.com/shutterstock/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/master/en"
-  download.file(urlbad, ".\\badWords", method = "auto", quiet=FALSE)
-  badwords <- readLines(".\\badWords")
-}
-
-file <- paste(datadir, fileb, sep="\\")
-trainfile <- paste(datadir, "train.txt", sep="\\")
-BBG     <- "__s__"
-EEN     <- "__es__"
-APO     <- "__ap__"
-CFILES  <- "stucknames.save"
-limit   <-  10000000
-mapLen  <- 2000
-NOHAPAX <- T
-D       <- 0.75
-MINPROB <- 1E-8
-TOLOWER <- T
-
-lang <- "en_US"
-
-#-----------------------------------------------------------------
 
 #############    train, test validation   ########################
 # sequential cut (statistical cut would be better)
