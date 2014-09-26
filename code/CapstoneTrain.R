@@ -77,6 +77,8 @@ if(RELOAD02){
 # create td data table from corpus
 RELOAD03 <- T
 if(RELOAD03){
+    
+    # create data tables
     system.time(tddf  <- pasteNGram(corpfiles, 1, tolower=TOLOWER))
     system.time(tddf2 <- pasteNGram(corpfiles, 2, tolower=TOLOWER))
     system.time(tddf3 <- pasteNGram(corpfiles, 3, tolower=TOLOWER))
@@ -84,11 +86,11 @@ if(RELOAD03){
     #  add index and remove start of phrase
     tddf2 <- addIndexN(tddf2 ,2)
     tddf3 <- addIndexN(tddf3 ,3)
-
+    
     tddf  <- removeStartOfPhrase(tddf,  1)
     tddf2 <- removeStartOfPhrase(tddf2, 2)
     tddf3 <- removeStartOfPhrase(tddf3, 3)
-
+    
     
     save(tddf,  file= paste(datadir, "tddf.save",  sep="\\"))
     save(tddf2, file= paste(datadir, "tddf2.save", sep="\\"))
@@ -149,6 +151,7 @@ perp4
 #-----------------------------------------------------------------
 
 #-----------------------------------------------------------------
+here tests
 
 nextWord("fewfwew")
 
@@ -156,34 +159,15 @@ words <- prepareWords(ntddf)
 prediction <- findNextWord("is", words)
 prediction
 
-a <- tddf[substr(tddf$term, 1, 3)=="let",]
-a$term
 
 findNextWord("the")
 a <- nextWord("let's just")
 a
-string <- "Pippo "
-substr(rev(string), 1, 1)
-substr(string, nchar(string),nchar(string))
 
-nchar(string)
-strrev(string)
-?substr
-
-
-head(ntddf3)
-head(ntddf)
 
 completeWord("res", words)
 
 
-a
-casual <- floor(runif(1, 1, 4))
-# else{
-#     # default prediction. No information push the best cont prob
-#     type <- "you know nothing Jon Snow"
-#     ntddf[order(-Pcont)][floor(runif(1, 1, 4)),]$term
-    
-}
+
 
 
