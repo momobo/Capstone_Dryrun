@@ -295,16 +295,7 @@ addKNBigram <- function(df, df2, df3, D2=D){
     
     w2 <- vapply(strsplit(as.character(df2$term), split=" "), '[', character(1L), 1)
     w3 <- vapply(strsplit(as.character(df2$term), split=" "), '[', character(1L), 2)
-    
-#     # df already indexed on term (doing 3 times is ineffic.)-------------------
-#     Clambda1 <- function(word) df[word]$lambda
-#     NlambdaW2 <- vapply(w2, Clambda1, numeric(1))
-#     CPcont1 <- function(word) df[word]$Pcont 
-#     NPcontW3 <- vapply(w3, CPcont1, numeric(1))
-#     CDotWordDot <- function(word) df[word]$NDotWordDot
-#     NDotWordDot <- vapply(w2, CDotWordDot, numeric(1))
-    
-    #--------------------------------------------------------------------------
+        #--------------------------------------------------------------------------
     CWord <- function(word) (df[word])
     PWord <- sapply(w2, CWord, simplify = "array")
     NDotWordDot <- unlist(PWord[,"NDotWordDot",])
