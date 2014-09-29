@@ -2,27 +2,23 @@
 # Capstone Project
 # Training language file
 #-------------------------------------------------------------------------------
+# (modify the following dir to your working directory)
 Capstone_Main_Dir <- "C:\\Users\\mmorelli\\Google Drive\\Data Science\\10_Capstone"
 Github_URL <- "https://raw.githubusercontent.com/momobo/Capstone_Dryrun/master/code/CapstoneBase.R"
+
+# decide the language to train for
+lang <- "en_US"
+#lang <- "de_DE"
 
 #############    initialize variables ########################
 
 setwd(Capstone_Main_Dir)
 source(Github_URL)
 
-# decide the language to train for
-lang <- "en_US"
-#lang <- "de_DE"
+
 
 if(lang=="en_US"){
-    LOADBAD <- F # load bad words?
     TOLOWER <- T
-    if(LOADBAD){ 
-        # modify to reload, badword not used at the moment
-        urlbad <- "https://raw.githubusercontent.com/shutterstock/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/master/en"
-        download.file(urlbad, ".\\badWords", method = "auto", quiet=FALSE)
-        badwords <- readLines(".\\badWords")
-    }
 }else if(lang=="de_DE"){
     TOLOWER <- F
 }
@@ -32,15 +28,26 @@ datadir <- paste0(".\\data\\final\\", lang)
 fileb   <- paste0(lang, ".blogs.txt")
 file <- paste(datadir, fileb, sep="\\")
 trainfile <- paste(datadir, "train.txt", sep="\\")
-BBG     <- "__s__"
-EEN     <- "__es__"
-APO     <- "__ap__"
-CFILES  <- "stucknames.save"
-limit   <-  10000000
-mapLen  <- 2000
-NOHAPAX <- T
-D       <- 0.75
-MINPROB <- 1E-8
+
+#     LOADBAD <- F # load bad words?
+#     if(LOADBAD){ 
+#         # modify to reload, badword not used at the moment
+#         urlbad <- "https://raw.githubusercontent.com/shutterstock/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/master/en"
+#         download.file(urlbad, ".\\badWords", method = "auto", quiet=FALSE)
+#         badwords <- readLines(".\\badWords")
+#     }
+#############################   PARAMETERS   ###################################
+BBG     <- "__s__"                        # begin of phrase token
+EEN     <- "__es__"                       # end of phrase token
+APO     <- "__ap__"                       # special token for apostrophe
+CFILES  <- "stucknames.save"              # the list of corpus pieces
+limit   <-  5000                          # (short sample for testing purposes) 
+#limit   <-  1E10                         # (no limit, full sample) 
+mapLen  <- 2000                           # corpus piece length
+NOHAPAX <- T                              # if True ignore Hapax in multigram
+D       <- 0.75                           # Discount parameter
+MINPROB <- 1E-8                           # default probability (low) 
+################################################################################
 
 
 #-----------------------------------------------------------------

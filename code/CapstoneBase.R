@@ -32,8 +32,6 @@ library(plyr)
 library(data.table)
 #-----------------------------------------------------------------------------------------------
 
-
-
 #############    train, test validation   ########################
 # sequential cut (statistical cut would be better)
 
@@ -249,20 +247,20 @@ addKNUnigram <- function(df, df2, df3, D1=D){
     #    CDotWord <- function(word) nrow(df2[df2$start==word,]) 
     CDotWord <- function(word) sum(df2$start==word) 
     
-    print("calculate word dot")
+    cat("calculate word dot\n")
 
     setkey(df2, end)    
     CWordDot <- function(word) nrow(df2[word]) # how many bigram begins with word
     NWordDot <- vapply(df$term, CWordDot, numeric(1))
     
-    print("calculate dot word")
+    cat("calculate dot word\n")
     setkey(df2, start)
     CDotWord <- function(word) nrow(df2[word]) # how many bigram ends with word
     NDotWord <- vapply(df$term, CDotWord, numeric(1))
     
     df$Pcont <- NDotWord/ bigrams
     
-    print("calculate dot word dot")
+    cat("calculate dot word dot\n")
     #NWork, in how many trigram the word ist (in the middle)
     
     setkey(df3, mid)
@@ -286,7 +284,7 @@ addKNBigram <- function(df, df2, df3, D2=D){
     # modify df2. we operate for each term in df2
     # need df2 already processed
     
-
+    cat("calculate dot word dot, lambda, pcont\n")
     setkey(df3, post)
     CDotW1W2 <- function(w1w2) nrow(df3[w1w2])
     NDotW1W2 <- vapply(df2$term, CDotW1W2, numeric(1))
@@ -330,6 +328,7 @@ addKNTrigram <- function(df2, df3, D3=D){
     w1w2 <- paste(w1, w2, sep=" ")
     w2w3 <- paste(w2, w3, sep=" ")
 
+    cat("calculate Kneser-Ney probability for trigrams\n")
     # semplify like bigram (beware that are two distinct index)
     FcW1W2 <- function(w1w2) df2[w1w2]$cnt
     NcW1W2 <- vapply(w1w2, FcW1W2, numeric(1))
