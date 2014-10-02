@@ -44,7 +44,7 @@ CFILES  <- "stucknames.save"              # the list of corpus pieces
 limit   <-  5000                          # (short sample for testing purposes) 
 #limit   <-  1E10                         # (no limit, full sample) 
 mapLen  <- 2000                           # corpus piece length
-NOHAPAX <- T                              # if True ignore Hapax in multigram
+NOHAPAX <- F                              # if True ignore Hapax in multigram
 D       <- 0.75                           # Discount parameter
 MINPROB <- 1E-8                           # default probability (low) 
 ################################################################################
@@ -70,7 +70,7 @@ if(RELOAD02){
 }
 #  (use fakeCorp to load only a handful of corpus chunks)
 # 
-# corpfiles <- fakeCorp(55)
+# corpfiles <- fakeCorp(270)
 
 # load list of corpus files
 # corpfiles
