@@ -30,6 +30,7 @@ df2D <- copy(ntddf2)
 df3D <- copy(ntddf3)
 wordsD <- prepareWords(ntddf)
 
+trim.leading <- function (x)  sub("^\\s+", "", x)
 myTolower <- function(x) stri_trans_tolower(x, lang)
 
 fun <-function(string, df1, df2, df3, dict, tolower=T){

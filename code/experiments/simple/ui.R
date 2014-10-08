@@ -1,4 +1,3 @@
-
 library(shiny)
 boxstyle <- "border: 1px solid;box-shadow: 2px 2px 1px #888888;"
 
@@ -7,12 +6,7 @@ shinyUI(fluidPage(
     
     # Application title
     titlePanel("Swiftkey JHU Capstone Project"),
-    
-    # Sidebar with controls to provide a caption, select a dataset,
-    # and specify the number of observations to view. Note that
-    # changes made to the caption in the textInput control are
-    # updated in the output area immediately as you type
-    
+        
     sidebarLayout(
         sidebarPanel(
             img(src="united_kingdom_round_icon_64.png", height = 64, width = 64),
@@ -30,8 +24,6 @@ shinyUI(fluidPage(
             div(textOutput("captionDE", container = span), style=boxstyle)
         ),
         
-        # Show the caption, a summary of the dataset and an HTML 
-        # table with the requested number of observations
         mainPanel(
             
             p("p creates a paragraph of text. Note: this paragraph is followed by br(), which makes a blank line."),

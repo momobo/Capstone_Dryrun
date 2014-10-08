@@ -1,25 +1,3 @@
-#------------------------------------------------------------------------------------------------
-# Algorithm
-# Note:
-#   first Data Dable version
-# 
-# Train and write ARPA
-#   1 divide train, validation, test.
-#   (possibly in a single pass, polish corpus)
-#     On Train parse and get vocabulary (eliminate letter, )
-#     substitute out of vocabulary with <UNK>, end of phrase with <\s> eventually 
-#   load frequency for each word, bigram, trigram, tetragram
-#   From frequency calculate probability (smoothed katz backoff)
-#   Write an ARPA file
-# 
-# Prevision next word from stream (4 word)
-#   Load arpa file
-#   for each word in stream
-#     calculate max probability and emit more probabile next word
-# 
-# Calculate perplexity
-#   Use text stream and previde with prevision routine
-#-----------------------------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------------------------
 library(tm)
@@ -31,7 +9,7 @@ library(slam)
 library(plyr)
 library(data.table)
 #-----------------------------------------------------------------------------------------------
-#############################   PARAMETERS   ###################################
+####################### DEFAULT PARAMETERS   ###################################
 BBG     <- "__s__"                        # begin of phrase token
 EEN     <- "__es__"                       # end of phrase token
 APO     <- "__ap__"                       # special token for apostrophe
@@ -584,7 +562,15 @@ completeWord <- function(word, dictionary){
     setkey(dictionary, term)
     
     cat(sel[order(-cnt),][1:3,]$cnt, "\n")
-    if(is.na(rc[1])) rc <- "?"
+    # default answer
+    if(is.na(rc[1])) {
+        rc <- df1[order(-Pcont)][1:3,]$term
+    }else if(is.na(rc[2])){
+        rc[2:3] <- df1[order(-Pcont)][1:2,]$term
+    }else if(is.na(rc[3])){
+        rc[3] <- df1[order(-Pcont)][1,]$term
+    }
+    
     
     return(rc)
 }
