@@ -2,13 +2,22 @@ library(shiny)
 library(datasets)
 
 # load functions from github
-source("https://raw.githubusercontent.com/momobo/Capstone_Dryrun/master/code/CapstoneBase.R", local=T, encoding="UTF-8")
+# library(RCurl)
+# wget.and.source <- function(url, loc=F, enc="UTF-8") {
+#     fname <- tempfile()
+#     download.file(url, fname)
+#     source(fname, local=loc, encoding=enc)
+#     unlink(fname)
+# }
+#source("https://raw.githubusercontent.com/momobo/Capstone_Dryrun/master/code/CapstoneBase.R", local=T, encoding="UTF-8")
+#wget.and.source("https://raw.githubusercontent.com/momobo/Capstone_Dryrun/master/code/CapstoneBase.R", loc=F, enc="UTF-8")
+source("CapstoneBase_01.R")
 
 datadir <- "."
 # choose the characters that select the word (1,2,3)
-CHOICE1 <- ","
-CHOICE2 <- "."
-CHOICE3 <- "/"
+CHOICE1 <- "1"
+CHOICE2 <- "2"
+CHOICE3 <- "3"
 
 # load english language
 lang <- "en_US"
@@ -39,7 +48,7 @@ fun <-function(string, df1, df2, df3, dict, tolower=T){
     if(tolower){
         string <- myTolower(string)
     }
-    if(" " == substr(string, nchar(string),nchar(string))){
+    if(string == ""|" " == substr(string, nchar(string),nchar(string))){
         res <- nextWord(string, df1, df2, df3)
         return(res)
     }else{
@@ -81,10 +90,10 @@ shinyServer(function(input, output, session) {
             hint <- paste0(hint, " ")
             if(substring(cEN_clean, nchar(cEN_clean), nchar(cEN_clean)) == " "){
                 # if last word is a space no need to purge last word
-                updEN(paste0(cEN_clean, hint))
+                updEN(trim.leading(paste0(cEN_clean, hint)))
             }else{
                 cEN_purged <- purgeLastWord(cEN_clean)
-                updEN(paste(cEN_purged, hint))
+                updEN(trim.leading(paste(cEN_purged, hint)))
             }
         }
         

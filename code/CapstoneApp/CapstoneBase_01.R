@@ -1,25 +1,3 @@
-#------------------------------------------------------------------------------------------------
-# Algorithm
-# Note:
-#   first Data Dable version
-# 
-# Train and write ARPA
-#   1 divide train, validation, test.
-#   (possibly in a single pass, polish corpus)
-#     On Train parse and get vocabulary (eliminate letter, )
-#     substitute out of vocabulary with <UNK>, end of phrase with <\s> eventually 
-#   load frequency for each word, bigram, trigram, tetragram
-#   From frequency calculate probability (smoothed katz backoff)
-#   Write an ARPA file
-# 
-# Prevision next word from stream (4 word)
-#   Load arpa file
-#   for each word in stream
-#     calculate max probability and emit more probabile next word
-# 
-# Calculate perplexity
-#   Use text stream and previde with prevision routine
-#-----------------------------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------------------------
 library(tm)
@@ -27,42 +5,22 @@ library(RWeka)
 library(stringi)
 library(ggplot2)
 library(scales)
-#library(filehash)
 library(slam)
 library(plyr)
 library(data.table)
 #-----------------------------------------------------------------------------------------------
-
-#############    initialize variables ########################
-
-
-datadir <- ".\\data\\final\\en_US"
-fileb   <- "en_US.blogs.txt"
-# list of bad words
-LOADBAD <- F
-if(LOADBAD){ 
-# modify to reload, badword not used at the moment
-  urlbad <- "https://raw.githubusercontent.com/shutterstock/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/master/en"
-  download.file(urlbad, ".\\badWords", method = "auto", quiet=FALSE)
-  badwords <- readLines(".\\badWords")
-}
-
-file <- paste(datadir, fileb, sep="\\")
-trainfile <- paste(datadir, "train.txt", sep="\\")
-BBG     <- "__s__"
-EEN     <- "__es__"
-APO     <- "__ap__"
-CFILES  <- "stucknames.save"
-limit   <-  10000000
-mapLen  <- 2000
-NOHAPAX <- T
-D       <- 0.75
-MINPROB <- 1E-8
-TOLOWER <- F
-
-lang <- "en_US"
-
-#-----------------------------------------------------------------
+####################### DEFAULT PARAMETERS   ###################################
+BBG     <- "__s__"                        # begin of phrase token
+EEN     <- "__es__"                       # end of phrase token
+APO     <- "__ap__"                       # special token for apostrophe
+CFILES  <- "stucknames.save"              # the list of corpus pieces
+limit   <-  5000                          # (short sample for testing purposes) 
+#limit   <-  1E10                         # (no limit, full sample) 
+mapLen  <- 2000                           # corpus piece length
+NOHAPAX <- T                              # if True ignore Hapax in multigram
+D       <- 0.75                           # Discount parameter
+MINPROB <- 1E-8                           # default probability (low) 
+################################################################################
 
 #############    train, test validation   ########################
 # sequential cut (statistical cut would be better)
@@ -188,9 +146,9 @@ fakeCorp <- function(n, name="traincorpus.save"){
 #############    tokenize  ###############
 # NB: it is possible to parallelize the tokenization. Just divide the corpus in slices
 # then put togheter the resultant data frame. Then group by over the ngram (with ddply)
-loadNGram <- function(corpus, N){
+loadNGram <- function(corpus, N, tolower=TOLOWER){
     ntokenizer <- function(x, toks) function(x) NGramTokenizer(x, Weka_control(min = toks, max = toks))
-    tdm <-   TermDocumentMatrix(corpus, control = list(tokenize = ntokenizer(toks=N),wordLengths=c(1,Inf)))
+    tdm <-   TermDocumentMatrix(corpus, control = list(tokenize = ntokenizer(toks=N),wordLengths=c(1,Inf), tolower=tolower))
     
     df <- tdm2df(tdm, N)
     return(df)
@@ -211,14 +169,14 @@ tdm2df <- function(tdm, N){
   return(dfft)
 }
 
-pasteNGram <- function(corpfiles, N){
+pasteNGram <- function(corpfiles, N, tolower=TOLOWER){
     # should be faster with data table
     # should be much faster filtering hapax
     ldf <- list(NULL)
     for(i in 1:length(corpfiles)){
         cat(corpfiles[i], "gram:",N,"\n")
         load(file=paste(datadir, corpfiles[i], sep="\\"))
-        df <- loadNGram(chunk_corpus, N)
+        df <- loadNGram(chunk_corpus, N, tolower)
         ldf[[i]] <- df
     }
     cat("putting all togheter \n")
@@ -279,20 +237,20 @@ addKNUnigram <- function(df, df2, df3, D1=D){
     #    CDotWord <- function(word) nrow(df2[df2$start==word,]) 
     CDotWord <- function(word) sum(df2$start==word) 
     
-    print("calculate word dot")
+    cat("calculate word dot\n")
 
     setkey(df2, end)    
     CWordDot <- function(word) nrow(df2[word]) # how many bigram begins with word
     NWordDot <- vapply(df$term, CWordDot, numeric(1))
     
-    print("calculate dot word")
+    cat("calculate dot word\n")
     setkey(df2, start)
     CDotWord <- function(word) nrow(df2[word]) # how many bigram ends with word
     NDotWord <- vapply(df$term, CDotWord, numeric(1))
     
     df$Pcont <- NDotWord/ bigrams
     
-    print("calculate dot word dot")
+    cat("calculate dot word dot\n")
     #NWork, in how many trigram the word ist (in the middle)
     
     setkey(df3, mid)
@@ -316,7 +274,7 @@ addKNBigram <- function(df, df2, df3, D2=D){
     # modify df2. we operate for each term in df2
     # need df2 already processed
     
-
+    cat("calculate dot word dot, lambda, pcont\n")
     setkey(df3, post)
     CDotW1W2 <- function(w1w2) nrow(df3[w1w2])
     NDotW1W2 <- vapply(df2$term, CDotW1W2, numeric(1))
@@ -327,16 +285,7 @@ addKNBigram <- function(df, df2, df3, D2=D){
     
     w2 <- vapply(strsplit(as.character(df2$term), split=" "), '[', character(1L), 1)
     w3 <- vapply(strsplit(as.character(df2$term), split=" "), '[', character(1L), 2)
-    
-#     # df already indexed on term (doing 3 times is ineffic.)-------------------
-#     Clambda1 <- function(word) df[word]$lambda
-#     NlambdaW2 <- vapply(w2, Clambda1, numeric(1))
-#     CPcont1 <- function(word) df[word]$Pcont 
-#     NPcontW3 <- vapply(w3, CPcont1, numeric(1))
-#     CDotWordDot <- function(word) df[word]$NDotWordDot
-#     NDotWordDot <- vapply(w2, CDotWordDot, numeric(1))
-    
-    #--------------------------------------------------------------------------
+        #--------------------------------------------------------------------------
     CWord <- function(word) (df[word])
     PWord <- sapply(w2, CWord, simplify = "array")
     NDotWordDot <- unlist(PWord[,"NDotWordDot",])
@@ -360,6 +309,7 @@ addKNTrigram <- function(df2, df3, D3=D){
     w1w2 <- paste(w1, w2, sep=" ")
     w2w3 <- paste(w2, w3, sep=" ")
 
+    cat("calculate Kneser-Ney probability for trigrams\n")
     # semplify like bigram (beware that are two distinct index)
     FcW1W2 <- function(w1w2) df2[w1w2]$cnt
     NcW1W2 <- vapply(w1w2, FcW1W2, numeric(1))
@@ -466,7 +416,16 @@ nextWord <- function(sentence, df1, df2, df3, minProb=MINPROB){
         rc <- df1[order(-Pcont)][1:3,]$term
     }
     rc <- stri_replace_all_regex(rc, APO, "'")
-    if(is.na(rc[1])) rc <- "?"
+    
+    # default answer
+    if(is.na(rc[1])) {
+        rc <- df1[order(-Pcont)][1:3,]$term
+    }else if(is.na(rc[2])){
+        rc[2:3] <- df1[order(-Pcont)][1:2,]$term
+    }else if(is.na(rc[3])){
+        rc[3] <- df1[order(-Pcont)][1,]$term
+    }
+
     return(rc)
 }
 
