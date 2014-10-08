@@ -438,7 +438,16 @@ nextWord <- function(sentence, df1, df2, df3, minProb=MINPROB){
         rc <- df1[order(-Pcont)][1:3,]$term
     }
     rc <- stri_replace_all_regex(rc, APO, "'")
-    if(is.na(rc[1])) rc <- "?"
+    
+    # default answer
+    if(is.na(rc[1])) {
+        rc <- df1[order(-Pcont)][1:3,]$term
+    }else if(is.na(rc[2])){
+        rc[2:3] <- df1[order(-Pcont)][1:2,]$term
+    }else if(is.na(rc[3])){
+        rc[3] <- df1[order(-Pcont)][1,]$term
+    }
+
     return(rc)
 }
 
