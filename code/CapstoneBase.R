@@ -562,15 +562,7 @@ completeWord <- function(word, dictionary){
     setkey(dictionary, term)
     
     cat(sel[order(-cnt),][1:3,]$cnt, "\n")
-    # default answer
-    if(is.na(rc[1])) {
-        rc <- df1[order(-Pcont)][1:3,]$term
-    }else if(is.na(rc[2])){
-        rc[2:3] <- df1[order(-Pcont)][1:2,]$term
-    }else if(is.na(rc[3])){
-        rc[3] <- df1[order(-Pcont)][1,]$term
-    }
-    
+    if(is.na(rc[1])) rc <- "?"
     
     return(rc)
 }
