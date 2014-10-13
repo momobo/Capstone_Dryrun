@@ -34,7 +34,7 @@ shinyUI(fluidPage(
             p("Be aware that there are two prediction engines: "),
             tags$ol(
                 tags$li("at the beginning of the phrase and when jou just typed a space the engine is a Kneser-Ney trigram prediction algorithm,"), 
-                tags$li("if the last char typed is a character the engine is a Maximum Likelihood estimation for the completion of the last word.")
+                tags$li("in the middle of a word the engine is a Maximum Likelihood estimation for the completion of the last word (this is fancy speak to say that I just propose the three most frequent completion of the word).")
             ),
             br(),
             p("All the code is available on my github:", a("https://github.com/momobo/Capstone_Dryrun"), " where a detailed report on the methods utilized is also present.")
