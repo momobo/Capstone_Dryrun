@@ -13,9 +13,6 @@ Program and data for JHU Coursera Capstone Projec
 
 [Try the program here](https://momobo-coursera.shinyapps.io/CapstoneApp/)
 
-[Read the report here](http://momobo.github.io/Capstone_Doc/)
-
-[Try the program here](https://momobo-coursera.shinyapps.io/CapstoneApp/)
 
 
 
